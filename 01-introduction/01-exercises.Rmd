@@ -1,7 +1,7 @@
 ---
 title: "01-exercises"
-author: "Christopher Brown"
-date: "April 6, 2016"
+author: "Mark Cooke"
+date: "April 9, 2016"
 output: html_document
 ---
 
@@ -23,13 +23,20 @@ Write a function (f) that takes a vector of numbers, **x**, and returns a vector
 
 ```{r}
 f <- function(x) {
-  
-  # ...
-  
+  y<-prod(x)/x # may have NaN at indices of zeros in x
+  z<-which(x%in%0) # get indices of zeros in x
+  lz<-length(z)
+  if(lz>1){ # if > 1 zeros, all NaN = 0
+    for(idx in z){
+      y[idx]<-0
+    }
+  }else if (lz==1){ # if 1 zero, NaN = prod(other elements)
+    xmod<-x[-z]
+    y[z]<-prod(xmod)
+  }
+  return(y)
 }
-
 ```
-    
 
 
 ## Exercise 2
@@ -50,7 +57,19 @@ Write a function f(x) to accept an integer vector, and returns a vector with tho
 
 ```{r}
 f <- function(x) {
-  # ...
-  
+  numList<-c(1:x)
+  mulThree<-which((numList%%3)%in%0)
+  mulFive<-which((numList%%5)%in%0)
+  mulFifteen<-which((numList%%15)%in%0)
+  for(idx in mulThree){
+    numList[idx]<-"Fizz"
+  }
+  for(idx in mulFive){
+    numList[idx]<-"Buzz"
+  }
+  for(idx in mulFifteen){
+    numList[idx]<-"FizzBuzz"
+  }
+  return(numList)
 }
 ```
