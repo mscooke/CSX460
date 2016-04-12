@@ -57,19 +57,18 @@ Write a function f(x) to accept an integer vector, and returns a vector with tho
 
 ```{r}
 f <- function(x) {
-  numList<-c(1:x)
-  mulThree<-which((numList%%3)%in%0)
-  mulFive<-which((numList%%5)%in%0)
-  mulFifteen<-which((numList%%15)%in%0)
+  mulThree<-which((x%%3)%in%0)
+  mulFive<-which((x%%5)%in%0)
+  mulFifteen<-which((x%%15)%in%0)
   for(idx in mulThree){
-    numList[idx]<-"Fizz"
+    x[idx]<-"Fizz"
   }
   for(idx in mulFive){
-    numList[idx]<-"Buzz"
+    x[idx]<-"Buzz"
   }
   for(idx in mulFifteen){
-    numList[idx]<-"FizzBuzz"
+    x[idx]<-"FizzBuzz"
   }
-  return(numList)
+  return(x)
 }
 ```
