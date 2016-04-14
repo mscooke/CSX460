@@ -26,7 +26,13 @@ data(FuelEconomy)
 
 ```
 
+```{r}
+dat<-bind_rows(cars2010,cars2011,cars2012)
+```
 
+```{r}
+samp<-dat %>% sample_n(10)
+```
 
 ## Exercise 1
 
