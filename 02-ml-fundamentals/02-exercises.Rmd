@@ -1,7 +1,7 @@
 ---
 title: "02-exercises"
-author: "Christopher Brown"
-date: "April 13, 2016"
+author: "Mark Cooke"
+date: "April 18, 2016"
 output: html_document
 ---
 
@@ -27,14 +27,6 @@ data(FuelEconomy)
 ```
 
 
-```{r}
-dat<-bind_rows(cars2010,cars2011,cars2012)
-```
-
-```{r}
-samp<-dat %>% sample_n(10)
-```
-
 ## Exercise 1
 
 Hint: See `?cars2010`
@@ -43,46 +35,28 @@ Hint: See `?cars2010`
 - After the **Fuel Economy** data is loaded, combine three data sets into one data set. (Note: The name `dat` is very often used in these situations, `data` is a reserved R word.)  
 
 ```{r}
-<<<<<<< HEAD
-dat <- ... # cars2010, cars2011, cars2012)    # Define 
-=======
-dat <- bind_rows( cars2010, cars2011, cars2012)    # Define 
->>>>>>> class/master
+dat<-bind_rows(cars2010,cars2011,cars2012)
 ```
-
 
 - What is a good "naive guess" of FE? Show your work
 
 ```{r}
-<<<<<<< HEAD
-naive_guess <- ...
-=======
-naive_guess <- mean(dat$FE)
->>>>>>> class/master
+naive_guess <- mean(dat$FE) # 35.03823
 ```
-
 
 - plot FE (Fuel Econonomy) vs. EngDisp. Plot the naive guess.
 
 ```{r}
-# ... ggplot2  
+qplot(y=dat$FE,x=dat$EngDispl)+geom_hline(yintercept=naive_guess,color="red")
 ```
 
 - Sample 10 observations from `dat`
 - Plot this data. Add a line for the naive_guess. 
 
-
 ```{r}
-
 set.seed(314) 
-
-# Sample 
-samp <- dat %>% dplyr::sample_n(10) 
-
-# Plots 
-...
-
-
+samp<-dat %>% sample_n(10)
+qplot(y=samp$FE,x=samp$EngDispl)+geom_hline(yintercept=naive_guess,color="red") 
 ```
 
 
@@ -118,9 +92,18 @@ medae <- function(y, yhat) {
 
 
 Use these functions to evaluate the loss/performance of:
-- the naive guess
-
-
+- the naive guess (on dat - 3 car datasets)
+```{r}
+rmse(dat$FE,naive_guess) # 8.096176
+mae(dat$FE,naive_guess) # 6.319942
+medae(dat$FE,naive_guess) # 5.238326
+```
+- the naive guess (on the 10 randomly sampled cars)
+```{r}
+rmse(samp$FE,naive_guess) # 8.662936
+mae(samp$FE,naive_guess) # 6.197919
+medae(samp$FE,naive_guess) # 2.5855
+```
 
 ## Exercise 3: Linear Model and Model Performance 
 
@@ -128,23 +111,27 @@ Use these functions to evaluate the loss/performance of:
 
 
 ```{r}
-fit.2010 <- ... 
+fit.2010<-lm(FE~EngDispl,data=cars2010)
 ```
 
 - Use your functions to evaluate the training error
+```{r}
+y.2010<-predict.lm(fit.2010,newdata=cars2010)
+rmse.2010  <- rmse(cars2010$FE,y.2010) # 4.620076
+mae.2010   <- mae(cars2010$FE,y.2010) # 3.511693
+medae.2010 <- medae(cars2010$FE,y.2010) # 2.935792
+```
+
 - Use your model to:
 -- predict the FE for 2011. What is the RMSE errors associated with the predictions.
 -- predict the FE for 2012. What is the RMSE errors associated with the predictions.
 
 ```{r}
+y.2011 <- predict.lm(fit.2010,newdata=cars2011)
+y.2012 <- predict.lm(fit.2010,newdata=cars2012)
 
-y.2010 <- ... 
-y.2011 <- ... 
-y.2012 <- ...
-
-rmse.2010 <- ...
-rmse.2011 <- ...
-rmse.2012 <- ... 
+rmse.2011 <- rmse(cars2011$FE,y.2011) # 5.162531
+rmse.2012 <- rmse(cars2012$FE,y.2012) # 6.63853
 
 ```
 
