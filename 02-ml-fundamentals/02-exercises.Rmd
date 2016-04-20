@@ -3,6 +3,7 @@ title: "02-exercises"
 author: "Mark Cooke"
 date: "April 18, 2016"
 output: html_document
+fig_caption: yes
 ---
 
 This exercise uses the **Fuel Economy** data set from the **AppliedPredicitiveModeling** package.
@@ -61,6 +62,7 @@ samp<-dat %>% sample_n(10)
 qplot(y=samp$FE,x=samp$EngDispl)+geom_hline(yintercept=naive_guess,color="red") 
 ```
 
+![Fuel Efficiency vs. Eng Displ (10 samples)](eng_displ_samp.png)
 
 ## Exercise 2:
 
