@@ -2,8 +2,8 @@
 title: "02-exercises"
 author: "Mark Cooke"
 date: "April 18, 2016"
-output: html_document
-fig_caption: yes
+output: html_document:
+  fig_caption: true
 ---
 
 This exercise uses the **Fuel Economy** data set from the **AppliedPredicitiveModeling** package.
