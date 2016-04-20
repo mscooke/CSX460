@@ -158,12 +158,14 @@ rmse.2012
 - Provide betas
 
 
-First we plot `FE` versus `NumCyl` using 2010 data to evaluate the relationship, and whether the latter variable can serve as a good predictor.
+- First we plot `FE` versus `NumCyl` using 2010 data to evaluate the relationship, and whether the latter variable can serve as a good predictor.
+
 ![](FEvsNumCyl.png)
-There appears to a strong relationship, with decreasing `FE` as `NumCyl` increases.  However, if we plot `EngDispl`, our regression variable from the previous problem, versus `NumCyl`, we see a strong positive correlation, so it is unlikely that `NumCyl` will add a significant amount of new predictive power.
+
+- There appears to a strong relationship, with decreasing `FE` as `NumCyl` increases.  However, if we plot `EngDispl`, our regression variable from the previous problem, versus `NumCyl`, we see a strong positive correlation, so it is unlikely that `NumCyl` will add a significant amount of new predictive power.
 ![](EngDisplvsNumCyl.png)
 
-There are two `VarValve` variables: `VarValveLift` and `VarValveTiming`.  I will consider both.  Both are boolean variabes, and neither appear to be incredibly strong predictors for `FE`.
+- There are two `VarValve` variables: `VarValveLift` and `VarValveTiming`.  I will consider both.  Both are boolean variabes, and neither appear to be incredibly strong predictors for `FE`.
 ![](FEvsVarValveTiming.png)
 ![](FEvsVarValveLift.png)
 
