@@ -140,6 +140,9 @@ rmse.2012 <- rmse(cars2012$FE,y.2012) # 6.63853
 
 ```
 
+![](ypred2011.png)
+![](ypred2012.png)
+
 
 ```{r}
 # DO NOT EDIT 
