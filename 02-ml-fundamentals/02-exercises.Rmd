@@ -157,7 +157,7 @@ rmse.2012
 - Model the fuel economy (`FE`) as a function of `EngDispl`, `NumCyl` and `VarValve` using the `cars2011` data set.  
 - Provide betas
 
-
+Solution:
 - First we plot `FE` versus `NumCyl` using 2010 data to evaluate the relationship, and whether the latter variable can serve as a good predictor.
 
 ![](FEvsNumCyl.png)
@@ -169,7 +169,14 @@ rmse.2012
 ![](FEvsVarValveTiming.png)
 ![](FEvsVarValveLift.png)
 
+- First consider the two variable regression with `EngDispl` and `NumCyl`.
+
 ```{r}
-fit.2010 <- ...
-betas <- ...
+fit2.2010<-lm(FE~EngDispl+NumCyl,data=cars2010)
+betas2 <-coefficients(fit2.2010)
+```
+
+```
+(Intercept)    EngDispl      NumCyl 
+ 51.3541419  -3.7453521  -0.5880292 
 ```
