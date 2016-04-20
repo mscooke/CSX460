@@ -174,9 +174,44 @@ Solution:
 ```{r}
 fit2.2010<-lm(FE~EngDispl+NumCyl,data=cars2010)
 betas2 <-coefficients(fit2.2010)
-```
 
-```
 (Intercept)    EngDispl      NumCyl 
  51.3541419  -3.7453521  -0.5880292 
 ```
+
+This can be compared with the one variable `EngDispl` regression:
+```{r}
+betas1<-coefficients(fit.2010)
+(Intercept)    EngDispl 
+  50.563230   -4.520929 
+```
+
+- Now for the four variable regression:
+
+```{r}
+fit4.2010<-lm(FE~EngDispl+NumCyl+VarValveTiming+VarValveLift,data=cars2010)
+betas4<-coefficients(fit4.2010)
+ (Intercept)       EngDispl         NumCyl VarValveTiming   VarValveLift 
+  49.9466163     -3.5223471     -0.7221703      1.6204656      0.5551222 
+```
+  
+- Let's compare the RMSE applied to the 2011 data for each case:
+
+```{r}
+y.2011 <- predict.lm(fit.2010,newdata=cars2011)
+rmse(cars2011$FE,y.2011) # 5.162531
+y2.2011 <- predict.lm(fit2.2010,newdata=cars2011)
+rmse(cars2011$FE,y2.2011) # 5.149489
+y4.2011 <- predict.lm(fit4.2010,newdata=cars2011)
+rmse(cars2011$FE,y4.2011) # 5.025094
+```
+
+For reference, the RMSE values when applied to the 2010 training data are:  4.620, 4.596, and 4.549, for the 3 fit cases, respectively.
+
+- Finally, let's plot the 2011 actual `FE` data versus the predicted values using the 4 variable fit trained on 2010 data.
+
+```{r}
+qplot( y=cars2011$FE, x=y4.2011) + geom_abline(intercept=0, slope=1)
+```
+
+![](ex4finalplot.png)
