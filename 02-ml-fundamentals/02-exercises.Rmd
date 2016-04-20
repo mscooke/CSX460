@@ -50,7 +50,7 @@ naive_guess <- mean(dat$FE) # 35.03823
 qplot(y=dat$FE,x=dat$EngDispl)+geom_hline(yintercept=naive_guess,color="red")
 ```
 
-[id]: eng_displ_dat.png "Fuel Efficiency vs. Eng Displ (all car data)"
+![Fuel Efficiency vs. Eng Displ (all car data)](eng_displ_dat.png)
 
 - Sample 10 observations from `dat`
 - Plot this data. Add a line for the naive_guess. 
