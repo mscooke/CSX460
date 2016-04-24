@@ -112,6 +112,12 @@ c(0,0.5,1) %>% logistic_inv
 
 Using the GermanCredit data from the **Caret** package/ UCI Machine Learning Library, create a model for `Class` ("Good" vs. "Bad" ). Show your model performance.  
 
+install.package("caret")"
+library(caret)
+data(GermanCreditData)
+fit.glm<-glm(Class~ ., data=GermanCredit,family="binomial")
+stepAIC(fit.glm,scope,direction )
+
 ```{r}
 
 
