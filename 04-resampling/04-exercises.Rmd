@@ -125,7 +125,7 @@ yhat = predict(fit.glm, test, type="response") > threshold
 
 
 fpr = function(y,yhat)
-  sum(y & (y != yhat) ) / # FP
+  sum(yhat & !y ) / # FP
   sum(! y)                # N
 
 fpr(y,yhat)
