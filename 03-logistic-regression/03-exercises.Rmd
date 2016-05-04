@@ -71,45 +71,35 @@ fit.backward <- stepAIC(fit.full, scope=forms, direction = "backward")
 
 - Are they the same model? If not why?  Which is better?
 
-Forward:
-length(coefficients(fit.forward)) # 42
+The forward stepwise regression model starts with an AIC value of `6054.49` using just the intercept (mean), and then proceeds to add the following 9 variables in order: `EngDispl`, `CarlineClassDesc`, `DriveDesc`, `Transmission`, `NumCyl`, `IntakeValvePerCyl`, `VarValveLift`, `TransLockup`, `NumGears`.  The corresponding progression of the AIC value is: `4571.86`, `4179.04`, `3917.90`, `3798.87`, `3705.00`, `3683.26`, `3667.99`, `3664.51`, `3662.66`.
 
+The forward regression model therefore does not use the following 4 variables, as they increase the AIC from this point slightly: `AirAspirationMethod` (`3663.1`), `TransCreeperGear` (`3663.5`), `VarValveTiming` (`3663.7`), `ExhaustValvesPerCyl` (`3664.0`).
+
+Some measures of the forward regression fit performance:
+```
 Residual standard error: 3.495 on 1405 degrees of freedom
 Multiple R-squared:  0.8191,	Adjusted R-squared:  0.8138 
 F-statistic: 155.1 on 41 and 1405 DF,  p-value: < 2.2e-16
+```
 
-Start:  AIC=6054.49		FE ~ 1
-Step:  AIC=4571.86		FE ~ EngDispl
-Step:  AIC=4179.04		FE ~ EngDispl + CarlineClassDesc
-Step:  AIC=3917.9		FE ~ EngDispl + CarlineClassDesc + DriveDesc
-Step:  AIC=3798.87		FE ~ EngDispl + CarlineClassDesc + DriveDesc + Transmission
-Step:  AIC=3705		FE ~ EngDispl + CarlineClassDesc + DriveDesc + Transmission + NumCyl
-Step:  AIC=3683.26		FE ~ EngDispl + CarlineClassDesc + DriveDesc + Transmission + NumCyl + IntakeValvePerCyl
-Step:  AIC=3667.99		FE ~ EngDispl + CarlineClassDesc + DriveDesc + Transmission + NumCyl + IntakeValvePerCyl + VarValveLift
-Step:  AIC=3664.51		FE ~ EngDispl + CarlineClassDesc + DriveDesc + Transmission + NumCyl + IntakeValvePerCyl + VarValveLift + TransLockup
-Step:  AIC=3662.66		FE ~ EngDispl + CarlineClassDesc + DriveDesc + Transmission + NumCyl + IntakeValvePerCyl + VarValveLift + TransLockup + NumGears
+The backward stepwise regression starts with all 13 variables and an AIC value of `3665.22`.  The first variable to removed is `VarValveTiming` decreasing the AIC value to `3663.8`.  The next variable to be removed is `IntakeValvePerCyl`, decreasing the AIC value to `3663.23`. After this, removing any remaining of the remmaing variables increases AIC.
 
-Finish without:
-+ AirAspirationMethod  2    41.841 17119 3663.1
-+ TransCreeperGear     1    14.106 17147 3663.5
-+ VarValveTiming       1    10.960 17150 3663.7
-+ ExhaustValvesPerCyl  1     7.542 17154 3664.0
-
-
-Backward:
-length(coefficients(fit.backward)) # 45
-
+Some measures of the backward regression fit performance:
+```
 Residual standard error: 3.492 on 1402 degrees of freedom
 Multiple R-squared:  0.8197,	Adjusted R-squared:  0.8141 
 F-statistic: 144.9 on 44 and 1402 DF,  p-value: < 2.2e-16
-Step:  AIC=3663.23
+```
 
-Start:  AIC=3665.22 (13 vars)
-Remove first VarValveTiming
-Step:  AIC=3663.81 (12 vars)
-Remove next IntakeValvePerCyl
-Step:  AIC=3663.23 (11 vars, final)
+The two models are not the same, namely forward uses 9 variables and backward uses 11 variables.  However, the final AIC values are very close (`3662.66` vs. `3663.23`), and the measures of fit performance are very similar.  A visual insepection of the coeffecients for the variables in common reveals they have very similar values.  Lastly, one can plot the fractional difference of the predictions between the two models.  The difference is typically less than 1% with a few outliers ranging up to 4-5%.  In summary, the two models are not identical, but very similar, and differ mainly due to small information content fluctuations in proceeding stepwise forward vs. backward from the simple versus full model.
 
+```{r}
+y.forw <- predict.lm(fit.forward,newdata=fe)
+y.back <- predict.lm(fit.backward,newdata=fe)
+qplot((y.forw-y.back)/y.back))
+```
+
+![](pred_frac_forwVback.png)
 
 ## Logsitic and Inverse Logistic Transformation 
 
@@ -132,16 +122,18 @@ logistic <- function(x) {
 }
 
 ggplot(data.frame(x=c(-10, 10)), aes(x)) + stat_function(fun=logistic)
-#qplot( ... )
 
 logistic_inv <- function(y) { 
   log(y/(1-y))
 }
 
 ggplot(data.frame(x=c(0, 1)), aes(x)) + stat_function(fun=logistic_inv)
-#qplot(...) 
+
 
 ```
+
+![](logistic.png)
+![](logistic_inv.png)
 
 **NOTE"** These functions are quite handy, in evaluating logistic regression results. You may want to save these functions in your own package.  
 
