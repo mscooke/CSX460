@@ -1,7 +1,7 @@
 ---
 title: "03-exercises"
-author: "Your Name Here"
-date: "April 20, 2016"
+author: "Mark Cooke"
+date: "May 4, 2016"
 output: html_document
 ---
 
@@ -27,7 +27,7 @@ Note: The following will set-up your environment for this exercise. If you get a
 
 ```{r,echo=FALSE, warning=FALSE, message=FALSE}
 
-packs <-  c('AppliedPredictiveModeling', 'ggplot2', 'magrittr', 'dplyr', 'caret')
+packs <-  c('AppliedPredictiveModeling', 'ggplot2', 'magrittr', 'dplyr', 'caret','MASS')
 
 for( nm in packs ) { 
   # message(nm)
@@ -57,14 +57,58 @@ Using Fuel Economy data set from the **AppliedPredictiveModeling** Package.
 - USe MASS::StepAIC to improve the model using backward stepwise regression 
 
 ```{r}
-
- # Your work here
-
+# Simplest model (intercept-only)
+fit.simple<-lm(FE~1,fe)
+# Define full linear model form
+forms = FE ~ EngDispl + NumCyl + Transmission + FE + AirAspirationMethod + NumGears + TransLockup + TransCreeperGear + DriveDesc + IntakeValvePerCyl + ExhaustValvesPerCyl + CarlineClassDesc + VarValveTiming + VarValveLift
+# Forward stepwise regression on simple model
+fit.forward <- stepAIC(fit.simple, scope=forms, direction = "forward")
+# Define full model
+fit.full<-lm(FE~.,fe)
+# Backward stepwise regression on full model
+fit.backward <- stepAIC(fit.full, scope=forms, direction = "backward")
 ```
 
 - Are they the same model? If not why?  Which is better?
 
+Forward:
+length(coefficients(fit.forward)) # 42
 
+Residual standard error: 3.495 on 1405 degrees of freedom
+Multiple R-squared:  0.8191,	Adjusted R-squared:  0.8138 
+F-statistic: 155.1 on 41 and 1405 DF,  p-value: < 2.2e-16
+
+Start:  AIC=6054.49		FE ~ 1
+Step:  AIC=4571.86		FE ~ EngDispl
+Step:  AIC=4179.04		FE ~ EngDispl + CarlineClassDesc
+Step:  AIC=3917.9		FE ~ EngDispl + CarlineClassDesc + DriveDesc
+Step:  AIC=3798.87		FE ~ EngDispl + CarlineClassDesc + DriveDesc + Transmission
+Step:  AIC=3705		FE ~ EngDispl + CarlineClassDesc + DriveDesc + Transmission + NumCyl
+Step:  AIC=3683.26		FE ~ EngDispl + CarlineClassDesc + DriveDesc + Transmission + NumCyl + IntakeValvePerCyl
+Step:  AIC=3667.99		FE ~ EngDispl + CarlineClassDesc + DriveDesc + Transmission + NumCyl + IntakeValvePerCyl + VarValveLift
+Step:  AIC=3664.51		FE ~ EngDispl + CarlineClassDesc + DriveDesc + Transmission + NumCyl + IntakeValvePerCyl + VarValveLift + TransLockup
+Step:  AIC=3662.66		FE ~ EngDispl + CarlineClassDesc + DriveDesc + Transmission + NumCyl + IntakeValvePerCyl + VarValveLift + TransLockup + NumGears
+
+Finish without:
++ AirAspirationMethod  2    41.841 17119 3663.1
++ TransCreeperGear     1    14.106 17147 3663.5
++ VarValveTiming       1    10.960 17150 3663.7
++ ExhaustValvesPerCyl  1     7.542 17154 3664.0
+
+
+Backward:
+length(coefficients(fit.backward)) # 45
+
+Residual standard error: 3.492 on 1402 degrees of freedom
+Multiple R-squared:  0.8197,	Adjusted R-squared:  0.8141 
+F-statistic: 144.9 on 44 and 1402 DF,  p-value: < 2.2e-16
+Step:  AIC=3663.23
+
+Start:  AIC=3665.22 (13 vars)
+Remove first VarValveTiming
+Step:  AIC=3663.81 (12 vars)
+Remove next IntakeValvePerCyl
+Step:  AIC=3663.23 (11 vars, final)
 
 
 ## Logsitic and Inverse Logistic Transformation 
@@ -84,16 +128,18 @@ Using Fuel Economy data set from the **AppliedPredictiveModeling** Package.
 ```{r}
 
 logistic <- function(x) { 
-  ... # Your work here  
+  1/(1+exp(-x))
 }
 
-qplot( ... )
+ggplot(data.frame(x=c(-10, 10)), aes(x)) + stat_function(fun=logistic)
+#qplot( ... )
 
 logistic_inv <- function(y) { 
-  ... # Your work  
+  log(y/(1-y))
 }
 
-qplot(...) 
+ggplot(data.frame(x=c(0, 1)), aes(x)) + stat_function(fun=logistic_inv)
+#qplot(...) 
 
 ```
 
@@ -119,11 +165,13 @@ fit.glm<-glm(Class~ ., data=GermanCredit,family="binomial")
 stepAIC(fit.glm,scope,direction )
 
 ```{r}
-
-
+fit.glm<-glm(Class~ ., data=GermanCredit,family="binomial")
+yfit<-predict.glm(fit.glm,newdata=GermanCredit,type="response")
+qplot(x=GermanCredit$Class,y=yfit,geom="boxplot")
 ```
 
-
+#form = Class ~ InstallmentRatePercentage + SavingsAccountBonds.lt.100 + CreditHistory.ThisBank.AllPaid +
+#CheckingAccountStatus.lt.0 + CheckingAccountStatus.0.to.200
 
 ## Iterative Correlated Feature Removal 
 
