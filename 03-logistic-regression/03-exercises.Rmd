@@ -150,20 +150,16 @@ c(0,0.5,1) %>% logistic_inv
 
 Using the GermanCredit data from the **Caret** package/ UCI Machine Learning Library, create a model for `Class` ("Good" vs. "Bad" ). Show your model performance.  
 
-install.package("caret")"
-library(caret)
-data(GermanCreditData)
-fit.glm<-glm(Class~ ., data=GermanCredit,family="binomial")
-stepAIC(fit.glm,scope,direction )
-
 ```{r}
 fit.glm<-glm(Class~ ., data=GermanCredit,family="binomial")
 yfit<-predict.glm(fit.glm,newdata=GermanCredit,type="response")
 qplot(x=GermanCredit$Class,y=yfit,geom="boxplot")
 ```
 
-#form = Class ~ InstallmentRatePercentage + SavingsAccountBonds.lt.100 + CreditHistory.ThisBank.AllPaid +
-#CheckingAccountStatus.lt.0 + CheckingAccountStatus.0.to.200
+I fit the logistic model using all available variables.  The model predicts Good credit individuals very well, but is just about 50% accurate on the Bad conadidates.
+
+![](credit.png)
+
 
 ## Iterative Correlated Feature Removal 
 
