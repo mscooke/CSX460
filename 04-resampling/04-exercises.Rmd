@@ -135,31 +135,35 @@ threshold = 0.5
 y = test$Versicolor == 'versicolor'
 yhat = predict(fit.glm, test, type="response") > threshold
 
-# prevalence
+# prevalence [ = 0.293]
 prevalence<-function(y,yhat){
   sum(y)/length(y)
 }
-# accuracy
+# accuracy [ = 0.733 ]
 accuracy<-function(y,yhat){
   (sum(y&yhat)+sum(!y&!yhat))/length(y)
 }
-# error_rate
+# error_rate (also misclassificate rate) [ = 0.267 ]
 error_rate<-function(y,yhat){
   (sum(y&!yhat)+sum(!y&yhat))/length(y)
 }
-# tpr (true positive rate, also sensitivity or recall)
+# tpr (true positive rate, also sensitivity or recall) [ = 0.545 ] 
 tpr<-function(y,yhat){
+  sum(y&yhat)/sum(y)
+}
+# fpr (false positive rate) [ = 0.455 ]
+fpr<-function(y,yhat){
   sum(y&!yhat)/sum(y)
 }
-# fpr (false positive rate)
-tpr<-function(y,yhat){
-  sum(y&!yhat)/sum(y)
-}
-# tnr (true negative rate, also specificity)
+# tnr (true negative rate, also specificity) [ = 0.811 ]
 tnr<-function(y,yhat){
   sum(!y&!yhat)/sum(!y)
 }
-# precision
+# fnr (false negative or miss rate) [ = 0.455 ]
+fnr<-function(y,yhat){
+  sum(y&!yhat)/sum(yhat)
+}
+# precision (also positive predicted value) [ = 0.545]
 precision<-function(y,yhat){
   sum(y&yhat)/sum(yhat)
 }
@@ -167,4 +171,4 @@ precision<-function(y,yhat){
 
 - What is wrong with the modeling approach used?
 
-
+- This model to identify Versicolor, through grouping Setosa and Virginica as Other, and then using logistic regression, only correctly classifies true Versicolors about `50%` of the time (senistivity).  Non-versicolors are classified as other about `80%` of the time (specificity).  The threshold used was `0.5` and we could vary this to increase the sensitivity, but we will pay a price in specificity.  In general, we are not able to separate Versicolor from Virginica and Setosa, because Versicolor is generally between these other two species in the discriminating variables.  The other category essenitially averages Setosa and Viriginca, which looks a lot like Versicolor. 
