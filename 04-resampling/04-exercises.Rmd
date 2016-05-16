@@ -50,19 +50,27 @@ k=10
 sd_boot <- sapply(1:k, function(i) sample(x,replace=TRUE) %>% mean ) %>% sd
 ```
 
+- sd_boot   is: `r sd_boot`
+
 ```{r}
 # CROSS-VALIDATION
 
+# function to create a random (without replacement) partition of given size (partSize) from sample x
 makePart<-function(partSize,x){
   xpart<-sample(x,partSize,replace=FALSE)
   return(xpart)
 }
-  
+
+# function to remove a partition (xpart) from sample x and return the reduced sample (xnew)
 removePart<-function(xpart,x){
   xnew<-x[!x %in% xpart]
   return(xnew)
 }
 
+# main function: 
+# - compute partSize from input sample x size and number of folds (k) 
+# - continue to create partitions and compute their mean while enough entries to do so
+# - return the standard deviation of these k means
 performCV<-function(x,k){
   partSize = floor(length(x)/k)
   xnew<-x
@@ -79,9 +87,8 @@ sd_cv<-performCV(x,k)
 ```
 
 - sd_cv   is: `r sd_cv`
-- sd_boot is: `r sd_boot`
 
-
+- The bootstrap code returns a standard deviation of `2.21`, while the 10-fold cross validation code returns a standard deviation of `4.67`.  Varying the random number seed a repeating several times, the bootstrap results ranged from `0.9-2.2`, and the 10-fold CV code from `3.3-4.7`.  I also varied the size of x from 20 to 50, 100, to 1000.  The standard deviation decreases for both BS and CV, but CV remained larger in all cases.  The book mentioned that CV generally has a higher variance than other methods, but potentially a lower bias.  I also examined the mean of means, and saw no evidence of a bias for either methods.
 
 # Exercise 2: Binomial Metrics
 
