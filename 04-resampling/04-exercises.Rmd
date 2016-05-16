@@ -46,17 +46,37 @@ x_mean = mean(x)
 
 k=10
 
-# CROSS-VALIDATION
-# ... YOUR WORK HWEW
-
-sd_cv <- .. # YOUR ANSWER HERE
-
-
 # BOOTSTRAP (EXAMPLE)
 sd_boot <- sapply(1:k, function(i) sample(x,replace=TRUE) %>% mean ) %>% sd
-
 ```
 
+```{r}
+# CROSS-VALIDATION
+
+makePart<-function(partSize,x){
+  xpart<-sample(x,partSize,replace=FALSE)
+  return(xpart)
+}
+  
+removePart<-function(xpart,x){
+  xnew<-x[!x %in% xpart]
+  return(xnew)
+}
+
+performCV<-function(x,k){
+  partSize = floor(length(x)/k)
+  xnew<-x
+  means<-c()
+  while(length(xnew) >= partSize){
+    xpart<-makePart(partSize,xnew)
+    means<-c(means,mean(xpart))
+    xnew<-removePart(xpart,xnew)
+  }
+  return(sd(means))
+}
+
+sd_cv<-performCV(x,k)
+```
 
 - sd_cv   is: `r sd_cv`
 - sd_boot is: `r sd_boot`
@@ -78,14 +98,14 @@ iris$Versicolor <-
   ifelse( iris$Species == 'versicolor', "versicolor", "other" ) %>% as.factor
 iris$Species = NULL 
 
+# Create Training and Test Samples
 wh <- sample.int( nrow(iris), size=nrow(iris)/2 )
 train <- iris[ wh,]
 test <- iris[ -wh, ]
 
-
+# Fit logistic model
 fit.glm <- glm( Versicolor ~ . - Sepal.Length, data=train, family=binomial )
 ```
-
 
 Use the models to and write functions to calculate:
 
@@ -104,37 +124,40 @@ Use the models to and write functions to calculate:
 The functions should take two logical vectors of the same length, `y` and `yhat`
 
 ```{r}
-
-prevalence = function(y,yhat) {}
-accuracy   =  .. 
-error_rate = ..
-tpr = ..
-fpr = ..      # See Example
-tnr = ..
-sensitivity = ..
-specificity = ..
-recall = .. 
-precision = ..
-
-# EXAMPLE: fpr
-# The FPR is THE NUMBER OF FALSE POSITIVES / NEGATIVES (TN+FP)
-
-threshold = 0.5 
+threshold = 0.5
 y = test$Versicolor == 'versicolor'
 yhat = predict(fit.glm, test, type="response") > threshold
 
-
-fpr = function(y,yhat)
-  sum(yhat & !y ) / # FP
-  sum(! y)                # N
-
-fpr(y,yhat)
-
+# prevalence
+prevalence<-function(y,yhat){
+  sum(y)/length(y)
+}
+# accuracy
+accuracy<-function(y,yhat){
+  (sum(y&yhat)+sum(!y&!yhat))/length(y)
+}
+# error_rate
+error_rate<-function(y,yhat){
+  (sum(y&!yhat)+sum(!y&yhat))/length(y)
+}
+# tpr (true positive rate, also sensitivity or recall)
+tpr<-function(y,yhat){
+  sum(y&!yhat)/sum(y)
+}
+# fpr (false positive rate)
+tpr<-function(y,yhat){
+  sum(y&!yhat)/sum(y)
+}
+# tnr (true negative rate, also specificity)
+tnr<-function(y,yhat){
+  sum(!y&!yhat)/sum(!y)
+}
+# precision
+precision<-function(y,yhat){
+  sum(y&yhat)/sum(yhat)
+}
 ```
 
 - What is wrong with the modeling approach used?
-
-
-
 
 
