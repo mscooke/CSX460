@@ -135,7 +135,7 @@ Prediction  Bad Good
  Accuracy (average) : 0.7596
  ```
 
- ![](ROC_rf.png)
+ ![](ROC_gbm.png)
 
 Q: Which models would you select based on these tools?
 
