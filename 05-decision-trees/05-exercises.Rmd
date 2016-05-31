@@ -69,7 +69,7 @@ Prediction  Bad Good
  Accuracy (average) : 0.743
 ```
 
-![](ROC_gml.png)
+![](ROC_glm.png)
 
 - K nearest neighbors:
 Best accuracy in scan above was k = 70.
