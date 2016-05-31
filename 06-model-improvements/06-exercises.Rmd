@@ -133,11 +133,12 @@ The residuals for the bagged conditional forest model:
 ![](bagres.png)
 
 ## Conclusion 
-
+```
 Linear model:       RMSE = 3.62, Rsquared = 0.80
 Best simple tree :  RMSE = 3.54, Rsquared = 0.81
 Gradient boosted :  RMSE = 2.93, Rsquared = 0.87
 Bagged cforest   :  RMSE = 2.60
+```
 
 I would choose the best performing models, such as stochastic gradient boosted trees, or bagged conditional inference trees, but only after trying out simpler models, such as the linear model, and gaining intuition for the baseline performance.  The complex models are not as easy to interpret, and often have a number of tuning parameters.  It is helpful to have a simple model reference point to make sure the complex models are yielding sensible results.
 
